@@ -2,6 +2,7 @@ const core = require('@actions/core');
 const github = require('@actions/github');
 const glob = require('@actions/glob');
 const path = require('node:path');
+const fs = require('node:fs')
 
 async function action() {
   try {
@@ -12,18 +13,39 @@ async function action() {
     console.log(`searching directory ${searchDirectory}`)
     const includePatterns = core.getInput("include")
     console.log(`using include patterns: ${includePatterns}`)
+    const excludePatterns = core.getInput("exclude")
+    if (excludePatterns === nil) {
+      console.log('no exclude patterns specified')
+    } else {
+      console.log(`using exclude patterns: ${excludePatterns}`)
+    }
 
-    const patterns = includePatterns.split(",")
+    let patterns = includePatterns.split(',')
     let fqPatterns = []
     for (let p of patterns) {
       fqPatterns = [...fqPatterns, path.join(searchDirectory, p)]
     }
+
+    if (excludePatterns !== nil) {
+      let exPatterns = excludePatterns.split(',')
+      for (let exPattern of exPatterns) {
+        fqPatterns = [...fqPatterns, '!' + path.join(searchDirectory, exPattern)]
+      }
+    }
+
     const globber = await glob.create(fqPatterns.join('\n'))
     const files = await globber.glob()
 
-    console.log(fqPatterns)
 
     for (let f of files) {
+      if (path.dirname(f) != workingDir) {
+        continue
+      }
+      // const stat = fs.statSync(f)
+      // if (!stat.isDirectory()) {
+      //   continue
+      // }
+
       console.log(f)
     }
 
