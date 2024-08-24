@@ -1,2 +1,2 @@
-# ci-actions
+# actions
 continuous integration actions
