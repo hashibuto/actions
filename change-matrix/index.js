@@ -13,7 +13,11 @@ try {
   console.log(`using include patterns: ${includePatterns}`)
 
   const patterns = includePatterns.split(",")
-  const globber = await glob.create(patterns.join('\n'))
+  const fqPatterns = []
+  for (let p in patterns) {
+    fqPatterns = [...fqPatterns, path.join(searchDirectory, p)]
+  }
+  const globber = await glob.create(fqPatterns.join('\n'))
   const files = await globber.glob()
 
   for (let f in files) {
