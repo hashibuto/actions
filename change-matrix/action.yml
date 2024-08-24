@@ -1,0 +1,22 @@
+name: 'change-matrix'
+description: 'generate changed directory matrix'
+inputs:
+  base-directory:
+    description: 'base directory to iterate for changed directories'
+    default: '.'
+  include:
+    description: 'comma separated list of glob patterns of files to include'
+    required: false
+  exclude:
+    description: 'comma separated list of glob patterns of files to exclude'
+    required: false
+  mustContain:
+    description: 'comma separated list of sub-paths which must exist in order to be traversed'
+    required: false
+outputs:
+  directories:
+    description: 'json list of all directories containing changes'
+    value: ${{ steps.changed_directories.outputs.directories }}
+runs:
+  using: 'node20'
+  main: 'index.js'
