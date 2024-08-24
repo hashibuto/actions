@@ -1,6 +1,6 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
-const github = require('@actions/glob');
+const glob = require('@actions/glob');
 const path = require('node:path');
 
 try {
