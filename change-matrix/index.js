@@ -1,13 +1,17 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
+const github = require('@actions/glob');
 const path = require('node:path');
 
 try {
   const baseDirectory = core.getInput('base-directory')
-  const searchDirectory = path.normalize(path.join(__dirname, baseDirectory))
+  const workingDir = process.env.GITHUB_WORKSPACE
+  const searchDirectory = path.normalize(path.join(workingDir, baseDirectory))
 
-  console.log(process.env.GITHUB_WORKSPACE)
   console.log(`searching directory ${searchDirectory}`)
+  const includePatterns = core.getInput("include")
+  console.log(`using include patterns: ${includePatterns}`)
+
 } catch (error) {
   core.setFailed(error.message);
 }
