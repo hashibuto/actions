@@ -14,7 +14,7 @@ async function action() {
     console.log(`using include patterns: ${includePatterns}`)
 
     const patterns = includePatterns.split(",")
-    const fqPatterns = []
+    let fqPatterns = []
     for (let p in patterns) {
       fqPatterns = [...fqPatterns, path.join(searchDirectory, p)]
     }
