@@ -6,7 +6,7 @@ try {
   const baseDirectory = core.getInput('base-directory')
   const searchDirectory = path.normalize(path.join(__dirname, baseDirectory))
 
-  console.log(github.context)
+  console.log(github)
   console.log(`searching directory ${searchDirectory}`)
 } catch (error) {
   core.setFailed(error.message);
