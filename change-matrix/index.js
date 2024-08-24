@@ -9,6 +9,7 @@ async function action() {
     const baseDirectory = core.getInput('base-directory')
     const workingDir = process.env.GITHUB_WORKSPACE
     const searchDirectory = path.normalize(path.join(workingDir, baseDirectory))
+    const mustContain = core.getInput('mustContain')
 
     console.log(`searching directory ${searchDirectory}`)
     const includePatterns = core.getInput("include")
@@ -33,11 +34,8 @@ async function action() {
       }
     }
 
-    console.log(fqPatterns)
-
     const globber = await glob.create(fqPatterns.join('\n'))
     const files = await globber.glob()
-
 
     for (let f of files) {
       if (path.dirname(f) != workingDir) {
@@ -46,6 +44,13 @@ async function action() {
       const stat = fs.statSync(f)
       if (!stat.isDirectory()) {
         continue
+      }
+
+      if (mustContain !== '') {
+        const required = path.join(f, mustContain)
+        if (!fs.existsSync(required)) {
+          continue
+        }
       }
 
       console.log(f)
