@@ -15,7 +15,7 @@ async function action() {
 
     const patterns = includePatterns.split(",")
     let fqPatterns = []
-    for (let p in patterns) {
+    for (let p of patterns) {
       fqPatterns = [...fqPatterns, path.join(searchDirectory, p)]
     }
     const globber = await glob.create(fqPatterns.join('\n'))
@@ -23,7 +23,7 @@ async function action() {
 
     console.log(fqPatterns)
 
-    for (let f in files) {
+    for (let f of files) {
       console.log(f)
     }
 
