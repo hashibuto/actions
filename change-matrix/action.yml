@@ -1,6 +1,9 @@
 name: 'change-matrix'
 description: 'generate changed directory matrix'
 inputs:
+  parent-branch:
+    description: 'parent branch'
+    required: false
   base-directory:
     description: 'base directory to iterate for changed directories - ex: dir1 ex: dir1/dir2  ex: .'
     default: '.'
@@ -11,7 +14,7 @@ inputs:
   exclude:
     description: 'comma separated list of glob patterns of files to exclude - ex: .git*  ex: .git*,template'
     required: false
-  mustContain:
+  must-contain:
     description: 'comma separated list of sub-paths which must exist in order to be traversed - ex: VERSION  ex: subdir/important.txt'
     required: false
 outputs:

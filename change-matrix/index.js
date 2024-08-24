@@ -1,16 +1,24 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
 const glob = require('@actions/glob');
+const exec = require('@actions/exec');
 const path = require('node:path');
-const fs = require('node:fs')
+const fs = require('node:fs');
 
 async function action() {
   try {
     const baseDirectory = core.getInput('base-directory')
     const workingDir = process.env.GITHUB_WORKSPACE
     const searchDirectory = path.normalize(path.join(workingDir, baseDirectory))
-    const mustContain = core.getInput('mustContain')
-
+    const mustContain = core.getInput('must-contain')
+    let parentBranch = core.getInput('parent-branch')
+    if (parentBranch == '') {
+      parentBranch = github.context.payload.repository.default_branch
+    }
+    if (!parentBranch.startsWith('origin/')) {
+      parentBranch = `origin/${parentBranch}`
+    }
+    console.log(`parent branch: ${parentBranch}`)
     console.log(`searching directory ${searchDirectory}`)
     const includePatterns = core.getInput("include")
     console.log(`using include patterns: ${includePatterns}`)
@@ -36,6 +44,7 @@ async function action() {
 
     const globber = await glob.create(fqPatterns.join('\n'))
     const files = await globber.glob()
+    const checkDirs = {}
 
     for (let f of files) {
       if (path.dirname(f) != workingDir) {
@@ -53,9 +62,10 @@ async function action() {
         }
       }
 
-      console.log(f)
+      checkDirs[f] = true
     }
 
+    await exec.exec('git', ['diff', '--name-only', 'tag', github.context.sha])
 
   } catch (error) {
     core.setFailed(error.message);
