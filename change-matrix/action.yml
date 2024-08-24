@@ -6,6 +6,7 @@ inputs:
     default: '.'
   include:
     description: 'comma separated list of glob patterns of files to include'
+    default: '*'
     required: false
   exclude:
     description: 'comma separated list of glob patterns of files to exclude'

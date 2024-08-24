@@ -12,6 +12,15 @@ try {
   const includePatterns = core.getInput("include")
   console.log(`using include patterns: ${includePatterns}`)
 
+  const patterns = includePatterns.split(",")
+  const globber = await glob.create(patterns.join('\n'))
+  const files = await globber.glob()
+
+  for (let f in files) {
+    console.log(f)
+  }
+
+
 } catch (error) {
   core.setFailed(error.message);
 }
