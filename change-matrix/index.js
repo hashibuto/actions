@@ -21,6 +21,8 @@ async function action() {
     const globber = await glob.create(fqPatterns.join('\n'))
     const files = await globber.glob()
 
+    console.log(fqPatterns)
+
     for (let f in files) {
       console.log(f)
     }
