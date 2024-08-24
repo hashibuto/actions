@@ -43,10 +43,10 @@ async function action() {
       if (path.dirname(f) != workingDir) {
         continue
       }
-      // const stat = fs.statSync(f)
-      // if (!stat.isDirectory()) {
-      //   continue
-      // }
+      const stat = fs.statSync(f)
+      if (!stat.isDirectory()) {
+        continue
+      }
 
       console.log(f)
     }
