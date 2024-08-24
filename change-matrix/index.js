@@ -14,7 +14,7 @@ async function action() {
     const includePatterns = core.getInput("include")
     console.log(`using include patterns: ${includePatterns}`)
     const excludePatterns = core.getInput("exclude")
-    if (excludePatterns === nil) {
+    if (excludePatterns === null) {
       console.log('no exclude patterns specified')
     } else {
       console.log(`using exclude patterns: ${excludePatterns}`)
@@ -26,7 +26,7 @@ async function action() {
       fqPatterns = [...fqPatterns, path.join(searchDirectory, p)]
     }
 
-    if (excludePatterns !== nil) {
+    if (excludePatterns !== null) {
       let exPatterns = excludePatterns.split(',')
       for (let exPattern of exPatterns) {
         fqPatterns = [...fqPatterns, '!' + path.join(searchDirectory, exPattern)]
