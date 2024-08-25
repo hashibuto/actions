@@ -98,9 +98,20 @@ async function action() {
     }
 
     await exec.exec('git', ['pull'])
-    const result = await exec.exec('git', ['diff', '--name-only', baseTag, github.context.sha])
-    console.log(result)
 
+    let changedFiles = '';
+    const rc = await exec.exec('git', ['diff', '--name-only', baseTag, github.context.sha], {
+      listeners: {
+        stdout: (data) => {
+          changedFiles += data.toString();
+        }
+      }
+    })
+    if (rc !== 0) {
+      throw new Error('problem obtaining diff')
+    }
+
+    console.log(changedFiles.split('\n'))
   } catch (error) {
     core.setFailed(error.message);
   }
