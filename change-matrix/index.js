@@ -18,6 +18,7 @@ async function action() {
     if (!parentBranch.startsWith('origin/')) {
       parentBranch = `origin/${parentBranch}`
     }
+    console.log(github.token)
     console.log(`parent branch: ${parentBranch}`)
     console.log(`searching directory ${searchDirectory}`)
     const includePatterns = core.getInput("include")
