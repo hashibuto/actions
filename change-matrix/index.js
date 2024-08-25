@@ -138,7 +138,7 @@ async function action() {
       seenChangedDirs[baseDir] = true
       dirsWithChanges = [...dirsWithChanges, baseDir]
 
-      console.log(baseDir)
+      console.log(`base dir: ${baseDir}`)
     }
   } catch (error) {
     core.setFailed(error.message);
