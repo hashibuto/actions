@@ -98,7 +98,8 @@ async function action() {
     }
 
     await exec.exec('git', ['pull'])
-    await exec.exec('git', ['diff', '--name-only', baseTag, github.context.sha])
+    const result = await exec.exec('git', ['diff', '--name-only', baseTag, github.context.sha])
+    console.log(result)
 
   } catch (error) {
     core.setFailed(error.message);
