@@ -111,7 +111,27 @@ async function action() {
       throw new Error('problem obtaining diff')
     }
 
-    console.log(changedFiles.split('\n'))
+    changedFiles = changedFiles.split('\n')
+
+    const sdTrailing = searchDirectory + "/"
+    const dirParts = searchDirectory.split('/').length
+
+    for (let cf of changedFiles) {
+      if (cf === '') {
+        continue
+      }
+
+      const fullPath = path.join(workingDir, cf)
+      if (!fullPath.startsWith(sdTrailing)) {
+        continue
+      }
+
+      const fullParts = fullPath.split('/')
+      const baseDir = fullParts.slice(0, dirParts+1).join('/')
+
+      console.log(fullPath)
+      console.log(baseDir)
+    }
   } catch (error) {
     core.setFailed(error.message);
   }
