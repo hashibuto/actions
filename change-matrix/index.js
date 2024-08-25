@@ -115,6 +115,8 @@ async function action() {
 
     const sdTrailing = searchDirectory + "/"
     const dirParts = searchDirectory.split('/').length
+    const seenChangedDirs = {}
+    let dirsWithChanges = []
 
     for (let cf of changedFiles) {
       if (cf === '') {
@@ -129,7 +131,13 @@ async function action() {
       const fullParts = fullPath.split('/')
       const baseDir = fullParts.slice(0, dirParts+1).join('/')
 
-      console.log(fullPath)
+      if (!baseDir in checkDirs || baseDir in seenChangedDirs) {
+        continue
+      }
+
+      seenChangedDirs[baseDir] = true
+      dirsWithChanges = [...dirsWithChanges, baseDir]
+
       console.log(baseDir)
     }
   } catch (error) {
