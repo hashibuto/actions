@@ -6,10 +6,12 @@ const path = require('node:path');
 const fs = require('node:fs');
 
 async function ensureBaseTag(octokit, tagName) {
-  console.log(github.context.payload.repository.owner)
-  // octokit.rest.checks.listForRef({
-  //   owner:  github.context.owner
-  // })
+  const resp = await octokit.rest.checks.listForRef({
+    owner:  github.context.payload.repository.owner.login,
+    repo: github.context.payload.repository.name,
+    ref: `tags/${tagName}`,
+  })
+  console.log(resp)
 }
 
 async function action() {
