@@ -97,6 +97,8 @@ async function action() {
       checkDirs[f] = true
     }
 
+    console.log(checkDirs)
+
     await exec.exec('git', ['pull'])
 
     let changedFiles = '';
