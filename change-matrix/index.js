@@ -79,7 +79,7 @@ async function action() {
     const checkDirs = {}
 
     for (let f of files) {
-      if (path.dirname(f) != workingDir) {
+      if (path.dirname(f) != searchDirectory) {
         continue
       }
       const stat = fs.statSync(f)
