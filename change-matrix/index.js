@@ -5,12 +5,23 @@ const exec = require('@actions/exec');
 const path = require('node:path');
 const fs = require('node:fs');
 
+async function ensureBaseTag(octokit, tagName) {
+  console.log(github.context.payload.repository.owner)
+  // octokit.rest.checks.listForRef({
+  //   owner:  github.context.owner
+  // })
+}
+
 async function action() {
   try {
     const baseDirectory = core.getInput('base-directory')
     const workingDir = process.env.GITHUB_WORKSPACE
     const searchDirectory = path.normalize(path.join(workingDir, baseDirectory))
     const mustContain = core.getInput('must-contain')
+    const githubToken = core.getInput('github-token')
+    const octokit = github.getOctokit(githubToken)
+    const baseTag = core.getInput('base-tag')
+
     let parentBranch = core.getInput('parent-branch')
     if (parentBranch == '') {
       parentBranch = github.context.payload.repository.default_branch
@@ -18,7 +29,9 @@ async function action() {
     if (!parentBranch.startsWith('origin/')) {
       parentBranch = `origin/${parentBranch}`
     }
-    console.log(core.getInput('github-token').length)
+
+    await ensureBaseTag(octokit, baseTag)
+
     console.log(`parent branch: ${parentBranch}`)
     console.log(`searching directory ${searchDirectory}`)
     const includePatterns = core.getInput("include")

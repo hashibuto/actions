@@ -19,6 +19,8 @@ inputs:
     required: false
   github-token:
     default: ${{ github.token }}
+  base-tag:
+    default: 'change-base'
 outputs:
   directories:
     description: 'json list of all directories containing changes'
