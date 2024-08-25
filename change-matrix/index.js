@@ -22,13 +22,14 @@ async function ensureBaseTag(octokit, tagName, parentBranch) {
       ref: `heads/${parentBranch}`,
     })
 
-    console.log(resp)
+    const branchHead = resp.data.object.sha
 
-    // await octokit.rest.git.createRef({
-    //   owner:  github.context.payload.repository.owner.login,
-    //   repo: github.context.payload.repository.name,
-    //   ref: `refs/tags/${tagName}`,
-    // })
+    await octokit.rest.git.createRef({
+      owner:  github.context.payload.repository.owner.login,
+      repo: github.context.payload.repository.name,
+      ref: `refs/tags/${tagName}`,
+      sha: branchHead,
+    })
   }
 }
 
