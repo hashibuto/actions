@@ -7,13 +7,28 @@ const fs = require('node:fs');
 
 async function ensureBaseTag(octokit, tagName, parentBranch) {
   try {
-    const resp = await octokit.rest.checks.listForRef({
+    await octokit.rest.checks.listForRef({
       owner:  github.context.payload.repository.owner.login,
       repo: github.context.payload.repository.name,
       ref: `tags/${tagName}`,
     })
+    console.log(`tag ${tagName} located`)
   } catch (error) {
     console.log(`creating tag ${tagName} against ${parentBranch}`)
+
+    const resp = await octokit.rest.git.getRef({
+      owner:  github.context.payload.repository.owner.login,
+      repo: github.context.payload.repository.name,
+      ref: `heads/${parentBranch}`,
+    })
+
+    console.log(resp)
+
+    // await octokit.rest.git.createRef({
+    //   owner:  github.context.payload.repository.owner.login,
+    //   repo: github.context.payload.repository.name,
+    //   ref: `refs/tags/${tagName}`,
+    // })
   }
 }
 
@@ -31,9 +46,9 @@ async function action() {
     if (parentBranch == '') {
       parentBranch = github.context.payload.repository.default_branch
     }
-    if (!parentBranch.startsWith('origin/')) {
-      parentBranch = `origin/${parentBranch}`
-    }
+    // if (!parentBranch.startsWith('origin/')) {
+    //   parentBranch = `origin/${parentBranch}`
+    // }
 
     await ensureBaseTag(octokit, baseTag, parentBranch)
 
