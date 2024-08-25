@@ -97,8 +97,6 @@ async function action() {
       checkDirs[f] = true
     }
 
-    console.log(checkDirs)
-
     await exec.exec('git', ['pull'])
 
     let changedFiles = '';
@@ -138,10 +136,13 @@ async function action() {
       }
 
       seenChangedDirs[baseDir] = true
-      dirsWithChanges = [...dirsWithChanges, baseDir]
-
-      console.log(`base dir: ${baseDir}`)
+      dirsWithChanges = [...dirsWithChanges, {
+        path: baseDir,
+        name: path.basename(baseDir),
+      }]
     }
+
+    core.setOutput('directories', dirsWithChanges)
   } catch (error) {
     core.setFailed(error.message);
   }
