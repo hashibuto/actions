@@ -133,7 +133,7 @@ async function action() {
       const fullParts = fullPath.split('/')
       const baseDir = fullParts.slice(0, dirParts+1).join('/')
 
-      if (!baseDir in checkDirs || baseDir in seenChangedDirs) {
+      if (!(baseDir in checkDirs) || (baseDir in seenChangedDirs)) {
         continue
       }
 
