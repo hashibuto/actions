@@ -17,8 +17,8 @@ inputs:
   must-contain:
     description: 'comma separated list of sub-paths which must exist in order to be traversed - ex: VERSION  ex: subdir/important.txt'
     required: false
-  secret:
-    default: ${{ secrets.GITHUB_TOKEN }}
+  github-token:
+    default: ${{ github.token }}
 outputs:
   directories:
     description: 'json list of all directories containing changes'
