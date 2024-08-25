@@ -17,6 +17,8 @@ inputs:
   must-contain:
     description: 'comma separated list of sub-paths which must exist in order to be traversed - ex: VERSION  ex: subdir/important.txt'
     required: false
+  secret:
+    default: ${{ secrets.GITHUB_TOKEN }}
 outputs:
   directories:
     description: 'json list of all directories containing changes'
@@ -24,5 +26,3 @@ outputs:
 runs:
   using: 'node20'
   main: 'index.js'
-  with:
-    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
