@@ -47,9 +47,6 @@ async function action() {
     if (parentBranch == '') {
       parentBranch = github.context.payload.repository.default_branch
     }
-    // if (!parentBranch.startsWith('origin/')) {
-    //   parentBranch = `origin/${parentBranch}`
-    // }
 
     await ensureBaseTag(octokit, baseTag, parentBranch)
 
@@ -100,7 +97,8 @@ async function action() {
       checkDirs[f] = true
     }
 
-    await exec.exec('git', ['diff', '--name-only', 'tag', github.context.sha])
+    await exec.exec('git', ['pull'])
+    await exec.exec('git', ['diff', '--name-only', baseTag, github.context.sha])
 
   } catch (error) {
     core.setFailed(error.message);
