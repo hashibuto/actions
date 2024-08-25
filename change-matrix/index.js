@@ -5,13 +5,16 @@ const exec = require('@actions/exec');
 const path = require('node:path');
 const fs = require('node:fs');
 
-async function ensureBaseTag(octokit, tagName) {
-  const resp = await octokit.rest.checks.listForRef({
-    owner:  github.context.payload.repository.owner.login,
-    repo: github.context.payload.repository.name,
-    ref: `tags/${tagName}`,
-  })
-  console.log(resp)
+async function ensureBaseTag(octokit, tagName, parentBranch) {
+  try {
+    const resp = await octokit.rest.checks.listForRef({
+      owner:  github.context.payload.repository.owner.login,
+      repo: github.context.payload.repository.name,
+      ref: `tags/${tagName}`,
+    })
+  } catch (error) {
+    console.log(`creating tag ${tagName} against ${parentBranch}`)
+  }
 }
 
 async function action() {
@@ -32,7 +35,7 @@ async function action() {
       parentBranch = `origin/${parentBranch}`
     }
 
-    await ensureBaseTag(octokit, baseTag)
+    await ensureBaseTag(octokit, baseTag, parentBranch)
 
     console.log(`parent branch: ${parentBranch}`)
     console.log(`searching directory ${searchDirectory}`)
