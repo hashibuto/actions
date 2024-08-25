@@ -24,3 +24,5 @@ outputs:
 runs:
   using: 'node20'
   main: 'index.js'
+  with:
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
