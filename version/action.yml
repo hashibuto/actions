@@ -1,0 +1,26 @@
+name: 'version'
+description: 'capture version info and ensure revision update'
+inputs:
+  working-directory:
+    description: 'alternate working directory if not starting at process.env.GITHUB_WORKSPACE'
+    default: ''
+  filename:
+    description: 'path relative to the working directory, where the file containing the version is located'
+    default: 'VERSION'
+  json-key:
+    description: 'dot delimited key, valid when file is a JSON file: eg: abc.def.ghi'
+    default: ''
+  toml-section:
+    description: 'toml section name, excluding "[]" characters'
+    default: ''
+  toml-key:
+    description: 'toml key name, located within toml-section'
+    default: ''
+  github-token:
+    default: ${{ github.token }}
+outputs:
+  version:
+    description: 'the current version of this revision'
+runs:
+  using: 'node20'
+  main: 'index.js'

@@ -3,8 +3,8 @@ const github = require('@actions/github');
 const glob = require('@actions/glob');
 const exec = require('@actions/exec');
 const path = require('node:path');
-const fs = require('node:fs');
 
+const fs = require('node:fs');
 async function ensureBaseTag(octokit, tagName, parentBranch) {
   try {
     await octokit.rest.checks.listForRef({
@@ -35,8 +35,11 @@ async function ensureBaseTag(octokit, tagName, parentBranch) {
 
 async function action() {
   try {
+    let workingDir = core.getInput('working-directory')
+    if (workingDir == '') {
+      workingDir = process.env.GITHUB_WORKSPACE
+    }
     const baseDirectory = core.getInput('base-directory')
-    const workingDir = process.env.GITHUB_WORKSPACE
     const searchDirectory = path.normalize(path.join(workingDir, baseDirectory))
     const mustContain = core.getInput('must-contain')
     const githubToken = core.getInput('github-token')
