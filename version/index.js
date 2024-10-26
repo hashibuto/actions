@@ -86,21 +86,27 @@ async function action() {
 
     const commitSha = process.env.GITHUB_SHA
     const shortSha = commitSha.substring(0, 10)
-    const branch = process.env.GITHUB_REF
+    const branch = process.env.GITHUB_REF.replace("refs/heads/", "")
 
     const commitVersion = `${version}.dev.${shortSha}`
     const branchVersion = `${version}.dev.${branch}`
     const timestampVersion = `${version}.dev${Math.floor(new Date().getTime() / 1000)}`
+    const versionTag = `${core.getInput('tag-prefix')}${version}`
+    const versionTagMajor = `${core.getInput('tag-prefix')}${version.split(".")[0]}`
 
     core.setOutput('version', version)
     core.setOutput('version-commit', commitVersion)
     core.setOutput('version-branch', branchVersion)
     core.setOutput('version-timestamp', timestampVersion)
+    core.setOutput('version-tag', versionTag)
+    core.setOutput('version-tag-major', versionTagMajor)
 
     core.exportVariable('VERSION', version);
     core.exportVariable('VERSION_COMMIT', commitVersion);
     core.exportVariable('VERSION_BRANCH', branchVersion);
     core.exportVariable('VERSION_TIMESTAMP', timestampVersion);
+    core.exportVariable('VERSION_TAG', versionTag);
+    core.exportVariable('VERSION_TAG_MAJOR', versionTagMajor);
   } catch (error) {
     core.setFailed(error.message);
   }
