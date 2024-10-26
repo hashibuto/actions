@@ -4,6 +4,8 @@ const github = require('@actions/github');
 async function action() {
   try {
     const mainBranch = core.getInput('main-branch')
+    const createVersionTag = core.getBooleanInput('create-version-tag')
+    const createMajorVersionTag = core.getBooleanInput('create-major-version-tag')
     const githubToken = core.getInput('github-token')
     const octokit = github.getOctokit(githubToken)
 
@@ -16,6 +18,39 @@ async function action() {
     } catch (error) {
       console.error(error)
       throw new Error(`unable to locate branch named "${mainBranch}"`)
+    }
+
+    const branch = process.env.GITHUB_REF.replace("refs/heads/", "")
+
+    if (branch === mainBranch) {
+      // if the current branch is the main branch, we should create the specified tags
+      if (createVersionTag === true) {
+        const versionTag = process.env.VERSION_TAG
+        if (versionTag === undefined) {
+          throw new Error("no version tag found in the environment, did you run the hashibuto/actions/version action?")
+        }
+
+        await octokit.rest.git.createRef({
+          owner:  github.context.payload.repository.owner.login,
+          repo: github.context.payload.repository.name,
+          ref: `refs/tags/${versionTag}`,
+          sha: process.env.GITHUB_SHA,
+        })
+      }
+
+      if (createMajorVersionTag === true) {
+        const versionTag = process.env.VERSION_TAG_MAJOR
+        if (versionTag === undefined) {
+          throw new Error("no major version tag found in the environment, did you run the hashibuto/actions/version action?")
+        }
+
+        await octokit.rest.git.createRef({
+          owner:  github.context.payload.repository.owner.login,
+          repo: github.context.payload.repository.name,
+          ref: `refs/tags/${versionTag}`,
+          sha: process.env.GITHUB_SHA,
+        })
+      }
     }
   } catch (error) {
     core.setFailed(error.message);
