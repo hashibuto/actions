@@ -11,7 +11,7 @@ async function action() {
       await octokit.rest.checks.listForRef({
         owner:  github.context.payload.repository.owner.login,
         repo: github.context.payload.repository.name,
-        ref: `refs/heads/${versionTag}`,
+        ref: `refs/heads/${mainBranch}`,
       })
     } catch (error) {
       console.error(error)
