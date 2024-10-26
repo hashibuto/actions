@@ -37,6 +37,7 @@ async function action() {
           ref: `refs/tags/${versionTag}`,
           sha: process.env.GITHUB_SHA,
         })
+        console.log(`generated version tag ${versionTag} against ${process.env.GITHUB_SHA}`)
       }
 
       if (createMajorVersionTag === true) {
@@ -51,6 +52,8 @@ async function action() {
           ref: `refs/tags/${versionTag}`,
           sha: process.env.GITHUB_SHA,
         })
+
+        console.log(`generated major version tag ${versionTag} against ${process.env.GITHUB_SHA}`)
       }
     } else {
       console.log('not on the main branch, skipping tagging')
