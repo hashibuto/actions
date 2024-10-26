@@ -122,6 +122,7 @@ async function action() {
     let dirsWithChanges = []
 
     for (let cf of changedFiles) {
+      console.log(`changed file: ${cf}`)
       if (cf === '') {
         continue
       }
