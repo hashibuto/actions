@@ -16,7 +16,7 @@ jobs:
       with:
         fetch-depth: 0
     - id: check-changes
-      uses: hashibuto/actions/change-matrix@master
+      uses: hashibuto/actions/change-matrix@change-matrix-v0
       with:
         exclude: .git*
         must-contain: VERSION
@@ -34,7 +34,7 @@ jobs:
         fetch-depth: 0
 
     - name: get version
-      uses: hashibuto/actions/version@master
+      uses: hashibuto/actions/version@version-v0
       with:
         working-directory: ${{ matrix.item.path }}
         filename: VERSION
@@ -49,6 +49,6 @@ jobs:
     needs: publish
     runs-on: ubuntu-22.04
     steps:
-    - uses: hashibuto/actions/tagger@master
+    - uses: hashibuto/actions/tagger@tagger-v0
       with:
         update-base-tag: 'true'
