@@ -23,6 +23,7 @@ async function action() {
     const branch = process.env.GITHUB_REF.replace("refs/heads/", "")
 
     if (branch === mainBranch) {
+      console.log('currently on the main branch, applying tags')
       // if the current branch is the main branch, we should create the specified tags
       if (createVersionTag === true) {
         const versionTag = process.env.VERSION_TAG
@@ -51,6 +52,8 @@ async function action() {
           sha: process.env.GITHUB_SHA,
         })
       }
+    } else {
+      console.log('not on the main branch, skipping tagging')
     }
   } catch (error) {
     core.setFailed(error.message);
