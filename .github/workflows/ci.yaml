@@ -1,0 +1,54 @@
+name: execute integration tasks
+
+on:
+  push:
+    branches:
+    - "**"
+
+jobs:
+  find-changed-dirs:
+    runs-on: ubuntu-22.04
+    name: generate-changed-dir-matrix
+    outputs:
+      directories: ${{ steps.check-changes.outputs.directories }}
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - id: check-changes
+      uses: hashibuto/actions/change-matrix@master
+      with:
+        exclude: .git*
+        must-contain: VERSION
+
+  publish:
+    needs: find-changed-dirs
+    runs-on: ubuntu-22.04
+    if: needs.find-changed-dirs.outputs.directories != '[]'
+    strategy:
+      matrix:
+        item: ${{ fromJson(needs.find-changed-dirs.outputs.directories) }}
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: get version
+      uses: hashibuto/actions/version@master
+      with:
+        working-directory: ${{ matrix.item.path }}
+        filename: VERSION
+        tag-prefix: "${{ matrix.item.name }}-"
+
+    - uses: hashibuto/actions/tagger@master
+      with:
+        create-version-tag: 'true'
+        create-major-version-tag: 'true'
+
+  update-base-tag:
+    needs: publish
+    runs-on: ubuntu-22.04
+    steps:
+    - uses: hashibuto/actions/tagger@master
+      with:
+        update-base-tag: 'true'
