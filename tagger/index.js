@@ -52,14 +52,23 @@ async function action() {
           throw new Error("no major version tag found in the environment, did you run the hashibuto/actions/version action?")
         }
 
-        await octokit.rest.git.createRef({
-          owner:  github.context.payload.repository.owner.login,
-          repo: github.context.payload.repository.name,
-          ref: `refs/tags/${versionTag}`,
-          sha: process.env.GITHUB_SHA,
-        })
-
-        console.log(`generated major version tag ${versionTag} against ${process.env.GITHUB_SHA}`)
+        try {
+          await octokit.rest.git.createRef({
+            owner:  github.context.payload.repository.owner.login,
+            repo: github.context.payload.repository.name,
+            ref: `refs/tags/${versionTag}`,
+            sha: process.env.GITHUB_SHA,
+          })
+          console.log(`created major version tag ${versionTag} against ${process.env.GITHUB_SHA}`)
+        } catch(error) {
+          await octokit.rest.git.updateRef({
+            owner:  github.context.payload.repository.owner.login,
+            repo: github.context.payload.repository.name,
+            ref: `refs/tags/${versionTag}`,
+            sha: process.env.GITHUB_SHA,
+          })
+          console.log(`updated major version tag ${versionTag} against ${process.env.GITHUB_SHA}`)
+        }
       }
 
       if (updateBaseTag === true) {
@@ -68,14 +77,12 @@ async function action() {
           throw new Error("no base tag found in the environment, did you run the hashibuto/actions/change-matrix action?")
         }
 
-        await octokit.rest.git.createRef({
+        await octokit.rest.git.updateRef({
           owner:  github.context.payload.repository.owner.login,
           repo: github.context.payload.repository.name,
           ref: `refs/tags/${versionTag}`,
           sha: process.env.GITHUB_SHA,
         })
-
-        console.log(`update base tag ${versionTag} against ${process.env.GITHUB_SHA}`)
       }
     } else {
       console.log('not on the parent branch, skipping tagging')
