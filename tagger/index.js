@@ -53,6 +53,7 @@ async function action() {
         }
 
         try {
+          console.log(`attempting to create major version tag ${versionTag} against ${process.env.GITHUB_SHA}`)
           await octokit.rest.git.createRef({
             owner:  github.context.payload.repository.owner.login,
             repo: github.context.payload.repository.name,
@@ -61,6 +62,7 @@ async function action() {
           })
           console.log(`created major version tag ${versionTag} against ${process.env.GITHUB_SHA}`)
         } catch(error) {
+          console.log(`version tag ${versionTag} already exists, attempting to update`)
           await octokit.rest.git.updateRef({
             owner:  github.context.payload.repository.owner.login,
             repo: github.context.payload.repository.name,
@@ -72,14 +74,13 @@ async function action() {
       }
 
       if (updateBaseTag === true) {
-        const versionTag = baseTag
-
         await octokit.rest.git.updateRef({
           owner:  github.context.payload.repository.owner.login,
           repo: github.context.payload.repository.name,
-          ref: `refs/tags/${versionTag}`,
+          ref: `refs/tags/${baseTag}`,
           sha: process.env.GITHUB_SHA,
         })
+        console.log(`updated base tag ${baseTag} against ${process.env.GITHUB_SHA}`)
       }
     } else {
       console.log('not on the parent branch, skipping tagging')
