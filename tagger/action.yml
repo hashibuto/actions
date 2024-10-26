@@ -9,7 +9,7 @@ inputs:
     description: 'create a major version tag if the current branch is the "main" branch'
     type: 'boolean'
     default: 'false'
-  main-branch-name:
+  main-branch:
     description: 'the name of the main branch'
     default: 'main'
   github-token:
