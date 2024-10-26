@@ -66,7 +66,7 @@ async function action() {
           await octokit.rest.git.updateRef({
             owner:  github.context.payload.repository.owner.login,
             repo: github.context.payload.repository.name,
-            ref: `refs/tags/${versionTag}`,
+            ref: `tags/${versionTag}`,
             sha: process.env.GITHUB_SHA,
           })
           console.log(`updated major version tag ${versionTag} against ${process.env.GITHUB_SHA}`)
@@ -77,7 +77,7 @@ async function action() {
         await octokit.rest.git.updateRef({
           owner:  github.context.payload.repository.owner.login,
           repo: github.context.payload.repository.name,
-          ref: `refs/tags/${baseTag}`,
+          ref: `tags/${baseTag}`,
           sha: process.env.GITHUB_SHA,
         })
         console.log(`updated base tag ${baseTag} against ${process.env.GITHUB_SHA}`)
