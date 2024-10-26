@@ -1,5 +1,6 @@
-const fs = require('node:fs');
 const core = require('@actions/core');
+const github = require('@actions/github');
+const fs = require('node:fs');
 const path = require('node:path');
 
 const tomlKeySplitter = new RegExp(/^(\w+): *(.+)$/)
@@ -93,6 +94,25 @@ async function action() {
     const timestampVersion = `${version}.dev${Math.floor(new Date().getTime() / 1000)}`
     const versionTag = `${core.getInput('tag-prefix')}${version}`
     const versionTagMajor = `${core.getInput('tag-prefix')}${version.split(".")[0]}`
+
+    const githubToken = core.getInput('github-token')
+    const octokit = github.getOctokit(githubToken)
+
+    let versionTagExists = false
+    try {
+      await octokit.rest.checks.listForRef({
+        owner:  github.context.payload.repository.owner.login,
+        repo: github.context.payload.repository.name,
+        ref: `tags/${versionTag}`,
+      })
+      versionTagExists = true
+    } catch (error) {
+      // no problem here, the tag is not supposed to exist
+    }
+
+    if (versionTagExists === true) {
+      throw new Error("this version already exists, please increment the version")
+    }
 
     core.setOutput('version', version)
     core.setOutput('version-commit', commitVersion)
