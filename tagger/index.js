@@ -3,9 +3,15 @@ const github = require('@actions/github');
 
 async function action() {
   try {
-    const mainBranch = core.getInput('main-branch')
+    let parentBranch = core.getInput('parent-branch')
+    let parentOverride = process.env.HASHIBUTO_PARENT_BRANCH
+    if (parentOverride !== undefined) {
+      parentBranch = parentOverride
+    }
+
     const createVersionTag = core.getBooleanInput('create-version-tag')
     const createMajorVersionTag = core.getBooleanInput('create-major-version-tag')
+    const updateBaseTag = core.getBooleanInput('update-base-tag')
     const githubToken = core.getInput('github-token')
     const octokit = github.getOctokit(githubToken)
 
@@ -13,18 +19,18 @@ async function action() {
       await octokit.rest.checks.listForRef({
         owner:  github.context.payload.repository.owner.login,
         repo: github.context.payload.repository.name,
-        ref: `refs/heads/${mainBranch}`,
+        ref: `refs/heads/${parentBranch}`,
       })
     } catch (error) {
       console.error(error)
-      throw new Error(`unable to locate branch named "${mainBranch}"`)
+      throw new Error(`unable to locate branch named "${parentBranch}"`)
     }
 
     const branch = process.env.GITHUB_REF.replace("refs/heads/", "")
 
-    if (branch === mainBranch) {
-      console.log('currently on the main branch, applying tags')
-      // if the current branch is the main branch, we should create the specified tags
+    if (branch === parentBranch) {
+      console.log('currently on the parent branch, applying tags')
+      // if the current branch is the parent branch, we should create the specified tags
       if (createVersionTag === true) {
         const versionTag = process.env.VERSION_TAG
         if (versionTag === undefined) {
@@ -55,8 +61,24 @@ async function action() {
 
         console.log(`generated major version tag ${versionTag} against ${process.env.GITHUB_SHA}`)
       }
+
+      if (updateBaseTag === true) {
+        const versionTag = process.env.HASHIBUTO_BASE_TAG
+        if (versionTag === undefined) {
+          throw new Error("no base tag found in the environment, did you run the hashibuto/actions/change-matrix action?")
+        }
+
+        await octokit.rest.git.createRef({
+          owner:  github.context.payload.repository.owner.login,
+          repo: github.context.payload.repository.name,
+          ref: `refs/tags/${versionTag}`,
+          sha: process.env.GITHUB_SHA,
+        })
+
+        console.log(`update base tag ${versionTag} against ${process.env.GITHUB_SHA}`)
+      }
     } else {
-      console.log('not on the main branch, skipping tagging')
+      console.log('not on the parent branch, skipping tagging')
     }
   } catch (error) {
     core.setFailed(error.message);

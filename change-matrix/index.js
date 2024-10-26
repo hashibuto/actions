@@ -147,6 +147,8 @@ async function action() {
     }
 
     core.setOutput('directories', dirsWithChanges)
+    core.exportVariable('HASHIBUTO_BASE_TAG', baseTag);
+    core.exportVariable('HASHIBUTO_PARENT_BRANCH', parentBranch);
   } catch (error) {
     core.setFailed(error.message);
   }

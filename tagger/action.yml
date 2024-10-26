@@ -2,19 +2,19 @@ name: 'tagger'
 description: 'generates tags based on environment variables created by hashibuto/actions/version'
 inputs:
   create-version-tag:
-    description: 'create a version tag if the current branch is the "main" branch'
+    description: 'create a version tag if the current branch is the parent branch'
     type: 'boolean'
     default: 'false'
   create-major-version-tag:
-    description: 'create a major version tag if the current branch is the "main" branch'
+    description: 'create a major version tag if the current branch is the parent branch'
     type: 'boolean'
     default: 'false'
   update-base-tag:
     description: 'update the base tag when using in conjunction with hashibuto/actions/change-matrix (runs at the end of all jobs on merge)'
     type: 'boolean'
     default: 'false'
-  main-branch:
-    description: 'the name of the main branch'
+  parent-branch:
+    description: 'the name of the parent branch (if hashibuto/actions/change-matrix is used, the branch specified there will override this one)'
     default: 'main'
   github-token:
     default: ${{ github.token }}
