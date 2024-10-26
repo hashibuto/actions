@@ -14,6 +14,7 @@ async function action() {
         ref: `refs/heads/${versionTag}`,
       })
     } catch (error) {
+      console.error(error)
       throw new Error(`unable to locate branch named "${mainBranch}"`)
     }
   } catch (error) {
