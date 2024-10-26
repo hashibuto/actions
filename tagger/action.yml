@@ -14,8 +14,8 @@ inputs:
     type: 'boolean'
     default: 'false'
   parent-branch:
-    description: 'the name of the parent branch (if hashibuto/actions/change-matrix is used, the branch specified there will override this one)'
-    default: 'main'
+    description: 'parent branch'
+    required: false
   base-tag:
     default: 'change-base'
   github-token:

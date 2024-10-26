@@ -3,7 +3,11 @@ const github = require('@actions/github');
 
 async function action() {
   try {
-    const parentBranch = core.getInput('parent-branch')
+    let parentBranch = core.getInput('parent-branch')
+    if (parentBranch == '') {
+      parentBranch = github.context.payload.repository.default_branch
+    }
+
     const baseTag = core.getInput('base-tag')
     const createVersionTag = core.getBooleanInput('create-version-tag')
     const createMajorVersionTag = core.getBooleanInput('create-major-version-tag')
