@@ -1,0 +1,19 @@
+name: 'tagger'
+description: 'generates tags based on environment variables created by hashibuto/actions/version'
+inputs:
+  create-version-tag:
+    description: 'create a version tag if the current branch is the "main" branch'
+    type: 'boolean'
+    default: 'true'
+  create-major-version-tag:
+    description: 'create a major version tag if the current branch is the "main" branch'
+    type: 'boolean'
+    default: 'false'
+  main-branch-name:
+    description: 'the name of the main branch'
+    default: 'main'
+  github-token:
+    default: ${{ github.token }}
+runs:
+  using: 'node20'
+  main: 'index.js'
