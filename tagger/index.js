@@ -73,9 +73,6 @@ async function action() {
 
       if (updateBaseTag === true) {
         const versionTag = baseTag
-        if (versionTag === undefined) {
-          throw new Error("no base tag found in the environment, did you run the hashibuto/actions/change-matrix action?")
-        }
 
         await octokit.rest.git.updateRef({
           owner:  github.context.payload.repository.owner.login,
