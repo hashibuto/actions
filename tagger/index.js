@@ -3,12 +3,8 @@ const github = require('@actions/github');
 
 async function action() {
   try {
-    let parentBranch = core.getInput('parent-branch')
-    let parentOverride = process.env.HASHIBUTO_PARENT_BRANCH
-    if (parentOverride !== undefined) {
-      parentBranch = parentOverride
-    }
-
+    const parentBranch = core.getInput('parent-branch')
+    const baseTag = core.getInput('base-tag')
     const createVersionTag = core.getBooleanInput('create-version-tag')
     const createMajorVersionTag = core.getBooleanInput('create-major-version-tag')
     const updateBaseTag = core.getBooleanInput('update-base-tag')
@@ -63,7 +59,7 @@ async function action() {
       }
 
       if (updateBaseTag === true) {
-        const versionTag = process.env.HASHIBUTO_BASE_TAG
+        const versionTag = baseTag
         if (versionTag === undefined) {
           throw new Error("no base tag found in the environment, did you run the hashibuto/actions/change-matrix action?")
         }

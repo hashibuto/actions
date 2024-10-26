@@ -16,6 +16,8 @@ inputs:
   parent-branch:
     description: 'the name of the parent branch (if hashibuto/actions/change-matrix is used, the branch specified there will override this one)'
     default: 'main'
+  base-tag:
+    default: 'change-base'
   github-token:
     default: ${{ github.token }}
 runs:
