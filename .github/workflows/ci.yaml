@@ -40,7 +40,7 @@ jobs:
         filename: VERSION
         tag-prefix: "${{ matrix.item.name }}-"
 
-    - uses: hashibuto/actions/tagger@master
+    - uses: hashibuto/actions/tagger@tagger-v0
       with:
         create-version-tag: 'true'
         create-major-version-tag: 'true'
