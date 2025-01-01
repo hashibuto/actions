@@ -70,7 +70,7 @@ async function action() {
           continue
         }
 
-        if (matches[1].trim() === key) {
+        if (matches[0][1].trim() === key) {
           version = matches[0][2].trim()
 
           break
