@@ -3,8 +3,8 @@ const github = require('@actions/github');
 const fs = require('node:fs');
 const path = require('node:path');
 
-const tomlKeySplitter = new RegExp(/^(\w+)\s*=\s*(.+)$/)
-const sectionMatcher = new RegExp(/^\s*\[+([^\]]+)]+\s*$/)
+const tomlKeySplitter = new RegExp(/^(\w+)\s*=\s*(.+)$/g)
+const sectionMatcher = new RegExp(/^\s*\[+([^\]]+)]+\s*$/g)
 
 async function action() {
   try {
