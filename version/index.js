@@ -59,9 +59,8 @@ async function action() {
       for (let line of lines) {
         if (curSection !== section) {
           const matches = [...line.matchAll(sectionMatcher)]
-          console.log(matches)
           if (matches.length !== 0) {
-            curSection = matches[1].trim()
+            curSection = matches[0][1].trim()
             continue
           }
         }
@@ -72,7 +71,7 @@ async function action() {
         }
 
         if (matches[1].trim() === key) {
-          version = matches[2].trim()
+          version = matches[0][2].trim()
 
           break
         }
