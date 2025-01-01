@@ -59,6 +59,7 @@ async function action() {
       for (let line of lines) {
         if (curSection !== section) {
           const matches = [...line.matchAll(sectionMatcher)]
+          console.log(matches)
           if (matches.length !== 0) {
             curSection = matches[1].trim()
             continue
