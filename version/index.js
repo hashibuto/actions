@@ -58,15 +58,15 @@ async function action() {
       const lines = dataString.split("\n")
       for (let line of lines) {
         if (curSection !== section) {
-          const matches = line.matchAll(sectionMatcher)
-          if (matches !== null) {
+          const matches = [...line.matchAll(sectionMatcher)]
+          if (matches.length !== 0) {
             curSection = matches[1].trim()
             continue
           }
         }
 
-        const matches = line.matchAll(tomlKeySplitter)
-        if (matches === null) {
+        const matches = [...line.matchAll(tomlKeySplitter)]
+        if (matches.length === 0) {
           continue
         }
 
