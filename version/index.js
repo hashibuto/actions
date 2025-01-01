@@ -3,8 +3,8 @@ const github = require('@actions/github');
 const fs = require('node:fs');
 const path = require('node:path');
 
-const tomlKeySplitter = new RegExp(/^(\w+): *(.+)$/)
-const sectionMatcher = new RegExp(/^\s*\[+([^\]]+)]+\s*$/)
+const tomlKeySplitter = new RegExp(/^(\w+)\s*=\s*(.+)$/g)
+const sectionMatcher = new RegExp(/^\s*\[+([^\]]+)]+\s*$/g)
 
 async function action() {
   try {
@@ -58,20 +58,20 @@ async function action() {
       const lines = dataString.split("\n")
       for (let line of lines) {
         if (curSection !== section) {
-          const matches = line.matchAll(sectionMatcher)
-          if (matches !== null) {
-            curSection = matches[1].trim()
+          const matches = [...line.matchAll(sectionMatcher)]
+          if (matches.length !== 0) {
+            curSection = matches[0][1].trim()
             continue
           }
         }
 
-        const matches = line.matchAll(tomlKeySplitter)
-        if (matches === null) {
+        const matches = [...line.matchAll(tomlKeySplitter)]
+        if (matches.length === 0) {
           continue
         }
 
-        if (matches[1].trim() === key) {
-          version = matches[2].trim()
+        if (matches[0][1].trim() === key) {
+          version = matches[0][2].trim()
           break
         }
       }
@@ -83,6 +83,10 @@ async function action() {
 
     if (version === undefined) {
       throw new Error(`unable to determine version from file ${fullPath}`)
+    }
+
+    if (version.startsWith('"') && version.endsWith('"')) {
+      version = version.substring(1, version.length - 1);
     }
 
     const commitSha = process.env.GITHUB_SHA
