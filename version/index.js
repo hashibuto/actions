@@ -72,7 +72,6 @@ async function action() {
 
         if (matches[0][1].trim() === key) {
           version = matches[0][2].trim()
-
           break
         }
       }
@@ -80,13 +79,14 @@ async function action() {
       // no known format, just return the first line
       const lines = dataString.split("\n")
       version = lines[0].trim()
-      if (version.startsWith('"') && version.endsWith('"')) {
-        version = version.substring(1, version.length - 1);
-      }
     }
 
     if (version === undefined) {
       throw new Error(`unable to determine version from file ${fullPath}`)
+    }
+
+    if (version.startsWith('"') && version.endsWith('"')) {
+      version = version.substring(1, version.length - 1);
     }
 
     const commitSha = process.env.GITHUB_SHA
